@@ -8,6 +8,6 @@ get '/' do
 end
 
 get '/customers' do
-  response = RestClient.get('http://localhost:3000/customers')
+  response = RestClient.get('http://backend:3000/customers')
   response
 end

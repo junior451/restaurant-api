@@ -1,0 +1,36 @@
+version: "3"
+services:
+  web:
+    image: nginx
+    ports:
+     - 80:80
+    command: /bin/bash -c "envsubst < /etc/nginx/conf.d/mysite.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"
+
+  sqlite3:
+      image: nouchka/sqlite3
+      stdin_open: true
+      volumes:
+        - ./db:/root/db/
+
+  backend:
+    build: "./Restaurant_Backend"
+    ports:
+      - 3000:3000
+    depends_on:
+      - sqlite3
+    links:
+      - sqlite3
+
+  customers:
+    build: "./Restaurant_Customers"
+    ports:
+      - 2000:2000
+    links:
+      - backend
+
+  staff:
+    build: "./Restaurant_Staff"
+    ports:
+      - 5000:5000
+    links:
+      - backend
