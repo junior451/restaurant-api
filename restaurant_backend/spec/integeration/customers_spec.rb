@@ -3,7 +3,7 @@ require_relative '../../main.rb'
 
 describe 'Customers' do
   include Rack::Test::Methods
-  let(:app) {App}
+  let(:app) { App }
 
   describe '/customers' do
 
