@@ -10,4 +10,4 @@ class Customers
   property :completed_at, DateTime
 end
 
-DataMapper.finalize!
+DataMapper.finalize
