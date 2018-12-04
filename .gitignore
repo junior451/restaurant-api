@@ -69,3 +69,8 @@ fabric.properties
 !.vscode/launch.json
 !.vscode/extensions.json
 
+restaurant_staff_backend/test.db
+restaurant_staff_backend/development.db
+restaurant_staff_backend/development.db
+restaurant_backend/test.db
+restaurant_customers_backend/test.db
