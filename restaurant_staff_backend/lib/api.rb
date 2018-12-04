@@ -1,21 +1,27 @@
 require 'sinatra/base'
 require 'json'
+require_relative 'staff'
 
 module RestaurantStaff
-  class API < Sinatra::Base
+  class API < Sinatra::Base    
     get '/' do
       'hello world'
     end
 
     get '/bookings/:id' do
-      id = params[:id].to_i
-      booking = {
-        id: id,
-        table_size: 4,
-        time: '4am'
-      }
+      staff = Staff.get(params[:id])
+      
+      { 
+        id:staff.id, 
+        name:staff.name, 
+        order_delivered:staff.order_delivered 
+      }.to_json
 
-      JSON.generate(booking)
+    end
+
+    post '/bookings' do
+      Staff.create(name:params[:name], order_delivered:params[:order_delivered])
+      request.body.read
     end
   end
 end
