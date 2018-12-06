@@ -19,9 +19,12 @@ module RestaurantStaff
 
     end
 
-    post '/bookings' do
-      Staff.create(name:params[:name], order_delivered:params[:order_delivered])
-      request.body.read
+    post '/staff' do
+      if params.empty?
+        [404, "no booking information"]
+      else
+        Staff.create(name:params[:name], order_delivered:params[:order_delivered])
+      end
     end
   end
 end
