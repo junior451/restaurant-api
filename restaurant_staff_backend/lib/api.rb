@@ -8,8 +8,12 @@ module RestaurantStaff
       'hello world'
     end
 
-    get '/bookings/:id' do
+    get '/staff/:id' do
       staff = Staff.get(params[:id])
+
+      if staff.nil?
+        halt [404, ""]
+      end
       
       { 
         id:staff.id, 

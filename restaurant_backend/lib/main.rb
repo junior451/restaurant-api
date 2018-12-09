@@ -9,8 +9,12 @@ module RestaurantCustomers
     end
   
     get '/customers/:id' do
-      customer = Customers.get(1)
+      customer = Customers.get(params[:id])
       
+      if customer.nil?
+        halt [404, ""]
+      end
+
       {
         id:customer.id,
         name:customer.name,

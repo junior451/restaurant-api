@@ -1,10 +1,6 @@
 RSpec.describe 'Restaurant Staff API' do
   let(:app) { RestaurantStaff::API.new }
 
-  before(:each) do
-    Staff.auto_migrate!
-  end
-
   describe 'Homepage' do
     it 'has a hello world text on the page' do
       get '/'
@@ -19,35 +15,43 @@ RSpec.describe 'Restaurant Staff API' do
     end
   end
 
-  describe 'View staff information' do
-    it 'returns a specific staff information based on an ID' do
-      expected_booking = {
-        id:1,
-        name:"Joseph",
-        order_delivered:3
-      }
+  describe 'get /staff/:id' do
+    let(:booking_info) { { id:1, name:"Joseph", order_delivered:3 } }
 
-      post '/staff', expected_booking
-      get '/bookings/1'
-
-      expect(last_response.body).to eq(expected_booking.to_json)
+    context 'success' do
+      it 'returns a specific staff information based on an ID' do
+        post '/staff', booking_info
+        get '/staff/1'
+  
+        expect(last_response.body).to eq(booking_info.to_json)
+      end
+  
+      it 'returns a 200' do
+        post '/staff', booking_info
+        get '/staff/1'
+  
+        expect(last_response.status).to eq(200)
+      end
     end
 
-    it 'returns a 200' do
-      expected_booking = {
-        id:1,
-        name:"Joseph",
-        order_delivered:3
-      }
+    context 'failure' do
+      it 'returns an empty body if the staff id doesnt exist' do
+        post '/staff', booking_info
+        get '/staff/2'
 
-      post '/staff', expected_booking
-      get '/bookings/1'
+        expect(last_response.body).to eq("")
+      end
 
-      expect(last_response.status).to eq(200)
+      it 'returns a 404' do
+        post '/staff', booking_info
+        get '/staff/2'
+
+        expect(last_response.status).to eq(404)
+      end
     end
   end
 
-  describe 'make a Booking' do
+  describe 'post /staff' do
     let(:staff_info) { { name:"Junior", order_delivered:6 } }
 
     context 'success' do

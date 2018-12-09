@@ -72,3 +72,4 @@ fabric.properties
 restaurant_staff_backend/test.db
 restaurant_staff_backend/development.db
 restaurant_staff_backend/development.db
+restaurant_backend/test.db
