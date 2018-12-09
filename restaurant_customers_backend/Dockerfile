@@ -2,7 +2,7 @@ FROM ruby:2.3.0
 MAINTAINER Bugs Bunny <bbunny@rubyplus.com>
 
 RUN apt-get update && \
-    apt-get install -y net-tools
+  apt-get install -y net-tools
 
 # Install gems
 ENV APP_HOME /app
