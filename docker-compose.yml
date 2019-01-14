@@ -1,36 +1,39 @@
 version: "3"
 services:
-  web:
-    image: nginx
+  customer_backend:
+    build: "./restaurant_customers_backend"
+    command: bundle exec rackup --host '0.0.0.0' -p 3000
     ports:
-     - 80:80
-    command: /bin/bash -c "envsubst < /etc/nginx/conf.d/mysite.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"
-
-  sqlite3:
-      image: nouchka/sqlite3
-      stdin_open: true
-      volumes:
-        - ./db:/root/db/
-
-  backend:
-    build: "./Restaurant_Backend"
-    ports:
-      - 3000:3000
-    depends_on:
-      - sqlite3
-    links:
-      - sqlite3
+      - "3000:3000" 
+    volumes:
+      - .:/myapp
 
   customers:
-    build: "./Restaurant_Customers"
+    build: "./restaurant_customers"
+    command:
+      bundle exec rackup --host '0.0.0.0' -p 2000  
     ports:
-      - 2000:2000
-    links:
-      - backend
+      - "2000:2000"
+    volumes:
+      - .:/myapp   
+    depends_on:
+      - customer_backend
 
-  staff:
-    build: "./Restaurant_Staff"
+  staff_backend:
+    build: "./restaurant_staff_backend"
+    command: bundle exec rackup --host '0.0.0.0' -p 4000
     ports:
-      - 5000:5000
-    links:
-      - backend
+      - "4000:4000" 
+    volumes:
+      - .:/myapp 
+  
+  staff:
+    build: "./restaurant_staff"
+    command:
+      bundle exec rackup --host '0.0.0.0' -p 5000
+    ports:
+      - "5000:5000"   
+    volumes:
+      - .:/myapp 
+    depends_on:
+      - staff_backend    

@@ -1,4 +1,26 @@
-app:
-  build: .
-  ports:
-    - 8000:5000
+version: '3'
+services:
+  backend:
+    build: "../restaurant_staff_backend"
+    command: bundle exec rackup --host '0.0.0.0' -p 4000
+    ports:
+      - "4000:4000" 
+    volumes:
+      - .:/myapp
+  customers_backend:
+    build: "../restaurant_customers_backend"
+    command: bundle exec rackup --host '0.0.0.0' -p 3000
+    ports:
+      - "3000:3000" 
+    volumes:
+      - .:/myapp        
+  web:
+    build: .
+    command:
+      bundle exec rackup --host '0.0.0.0' -p 5000
+    ports:
+      - "5000:5000"   
+    volumes:
+      - .:/myapp 
+    depends_on:
+      - backend

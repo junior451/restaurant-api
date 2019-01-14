@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'Customers' do
-  let(:app) { RestaurantCustomers::API.new }
+  let(:app) { RestaurantCustomersBackend::API.new }
 
   describe 'Homepage' do
     it 'returns homepage' do

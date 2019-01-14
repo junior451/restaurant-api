@@ -1,2 +1,2 @@
-require_require '/lib/main.rb'
-run RestaurantStaff:API.new
+require_relative 'lib/main.rb'
+run RestaurantCustomersBackend::API.new

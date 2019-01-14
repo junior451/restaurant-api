@@ -2,7 +2,7 @@ require 'sinatra/base'
 require_relative 'customers'
 require 'json'
 
-module RestaurantCustomers
+module RestaurantCustomersBackend
   class API < Sinatra::Base
     get '/' do
       "hello world"
@@ -20,7 +20,7 @@ module RestaurantCustomers
         name:customer.name,
         booked_table:customer.booked_table
       }.to_json
-
+      
     end
 
     post '/customers' do
