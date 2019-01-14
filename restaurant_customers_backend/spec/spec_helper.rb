@@ -4,7 +4,7 @@ require 'sinatra'
 require 'rack/test'
 require 'json'
 
-require_relative '../lib/api.rb'
+require_relative '../lib/main.rb'
 
 RSpec.configure do |config|
   config.include Rack::Test::Methods
