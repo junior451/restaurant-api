@@ -1,8 +1,7 @@
 FROM ruby:2.3.0
-MAINTAINER Bugs Bunny <bbunny@rubyplus.com>
 
 RUN apt-get update && \
-    apt-get install -y net-tools
+  apt-get install -y net-tools
 
 # Install gems
 ENV APP_HOME /app
@@ -16,6 +15,5 @@ RUN bundle install
 COPY . $APP_HOME
 
 # Start server
-ENV PORT 5000
 EXPOSE 5000
-CMD ["ruby", "main.rb"]
+CMD ["bundle", "exec", "rackup", "--host", "0.0.0.0", "-p", "5000"]
