@@ -16,7 +16,7 @@ RSpec.describe 'Restaurant Staff API' do
   end
 
   describe 'get /staff/:id' do
-    let(:booking_info) { { id:1, name:"Joseph", order_delivered:3 } }
+    let(:booking_info) { {id:1, name:"Joseph", order_delivered:3} }
 
     context 'success' do
       it 'returns a specific staff information based on an ID' do

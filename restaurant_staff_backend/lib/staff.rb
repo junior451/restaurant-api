@@ -14,11 +14,21 @@ configure :test do
   DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/test.db")
 end
 
+
 class Staff
   include DataMapper::Resource
   property :id, Serial
   property :name, String
   property :order_delivered, Integer
+end
+
+class Bookings
+  include DataMapper::Resource
+  property :id, Serial
+  property :name, String
+  property :table_size, Integer
+  property :phone_number, String
+  property :email_address, String
 end
 
 DataMapper.finalize

@@ -16,4 +16,4 @@ COPY . $APP_HOME
 
 # Start server
 EXPOSE 4000
-CMD ["bundle", "exec", "rackup", "--host", "0.0.0.0", "-p", "4000"]
+CMD ["bundle", "exec", "shotgun", "--host", "0.0.0.0", "-p", "4000"]

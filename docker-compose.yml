@@ -1,13 +1,16 @@
 version: "3"
 services:
+  db:
+    image: nouchka/sqlite3
   customer_backend:
     build: "./restaurant_customers_backend"
     command: bundle exec rackup --host '0.0.0.0' -p 3000
     ports:
-      - "3000:3000" 
+      - "3000:3000"
     volumes:
-      - .:/myapp
-
+      - .:/myapp/restaurant_customers_backend
+    depends_on:
+      - db  
   customers:
     build: "./restaurant_customers"
     command:
@@ -15,18 +18,16 @@ services:
     ports:
       - "2000:2000"
     volumes:
-      - .:/myapp   
+      - ./restaurant_customers:/myapp/restaurant_customers   
     depends_on:
       - customer_backend
-
   staff_backend:
     build: "./restaurant_staff_backend"
-    command: bundle exec rackup --host '0.0.0.0' -p 4000
+    command: bundle exec shotgun --host '0.0.0.0' -p 4000
     ports:
       - "4000:4000" 
     volumes:
-      - .:/myapp 
-  
+      - ./restaurant_staff_backend/deveopment.db:/myapp/restaurant_staff_backend/development.db
   staff:
     build: "./restaurant_staff"
     command:
@@ -34,6 +35,6 @@ services:
     ports:
       - "5000:5000"   
     volumes:
-      - .:/myapp 
+      - ./restaurant_staff:/myapp/restaurant_staff
     depends_on:
       - staff_backend    

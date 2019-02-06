@@ -1,0 +1,4 @@
+<h2>Bookings</h2>
+<% @bookings.each do |booking| %>
+  <a href="booking/<%= booking[:id]%>">Booking id: <%= booking[:id] %></a><br><br>
+<% end %>

@@ -1,6 +1,7 @@
 require 'sinatra/base'
 require_relative 'customers'
 require 'json'
+require 'rest-client'
 
 module RestaurantCustomersBackend
   class API < Sinatra::Base
@@ -20,7 +21,6 @@ module RestaurantCustomersBackend
         name:customer.name,
         booked_table:customer.booked_table
       }.to_json
-      
     end
 
     post '/customers' do

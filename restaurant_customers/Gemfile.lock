@@ -58,7 +58,7 @@ DEPENDENCIES
   rest-client
   rspec
   sinatra
-  thin
+  thin (~> 1.7)
 
 BUNDLED WITH
    1.16.0
