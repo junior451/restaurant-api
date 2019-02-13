@@ -1,8 +1,12 @@
 require 'sinatra'
 require 'rest-client'
 
+#localhost:9292
+
 module RestaurantStaff
   class API < Sinatra::Base
+    use Rack::MethodOverride
+
     get '/' do
       'hello world staff'
     end
@@ -14,9 +18,9 @@ module RestaurantStaff
     end
 
     get '/customers/:id' do
-			id = params[:id]
-			response = RestClient.get("restaurant-api_customer_backend_1:3000/customers/#{id}")
-			response
+      id = params[:id]
+      response = RestClient.get("restaurant-api_customer_backend_1:3000/customers/#{id}")
+      response
     end
     
     get '/booking/:id' do
@@ -40,6 +44,14 @@ module RestaurantStaff
 
       @bookings = params[:data]
       erb :bookings_list
+    end
+
+    delete '/booking/:id' do
+      RestClient.delete("localhost:8080//booking/#{params[:id]}")
+    end
+
+    get '/after_delete' do
+      'deleted'
     end
   end
 end

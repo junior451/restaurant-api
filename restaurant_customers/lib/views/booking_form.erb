@@ -1,7 +1,16 @@
+<h2>Booking Form</h2>
 <form method="POST" action="/booking">
-  <p>Your Name: <input type="text" name="booking[name]" /></p>
   <p>Table Size: <input type="number" name="booking[table_size]" min="1" max="12" /></p>
-  <p>Phone number: <input type="text" name="booking[phone_number]" /></p>
-  <p>Email Address: <input type="email" name="booking[email_address]" /></p>
+  <p>Date: <input type="date" name="booking[date]" /></p>
+  <p>Time: <input type="time" name="booking[time]" min="12:00" max="20:00" /></p>
+  <p>Reservation Type:
+    <select name="booking[reservation_type]">
+      <option value="dinner">Dinner</option>
+      <option value="birthday">Birthday</option>
+      <option value="nightlife">NightLife</option>
+      <option value="wedding">Wedding</option>
+      <option value="other">Other</option>
+    </select>
+  </p>
   <input type="submit">
 </form>

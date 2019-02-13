@@ -25,8 +25,12 @@ end
 class Bookings
   include DataMapper::Resource
   property :id, Serial
-  property :name, String
   property :table_size, Integer
+  property :date, String
+  property :time, String
+  property :reservation_type, String
+  property :booking_id, String
+  property :name, String
   property :phone_number, String
   property :email_address, String
 end

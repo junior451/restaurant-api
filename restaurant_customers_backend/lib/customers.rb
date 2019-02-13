@@ -18,7 +18,11 @@ class Customers
   include DataMapper::Resource
   property :id, Serial
   property :name, String
-  property :booked_table?, Boolean
+  property :phone_number, String
+  property :email_address, String
+  property :username, String
+  property :password, String
+  property :booking_id, String
 end
 
 DataMapper.finalize

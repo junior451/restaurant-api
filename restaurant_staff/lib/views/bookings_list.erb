@@ -1,4 +1,13 @@
 <h2>Bookings</h2>
-<% @bookings.each do |booking| %>
-  <a href="booking/<%= booking[:id]%>">Booking id: <%= booking[:id] %></a><br><br>
-<% end %>
+<span>
+  <% @bookings.each do |booking| %>
+    Booking <%= @bookings.index(booking) + 1 %>
+    <form action="/booking/<%= booking[:id]%>" method="get">
+      <input type="submit" value="view">
+    </form>
+    <form action="/booking/<%=booking[:id]%>" method="post">
+      <input type="hidden" name="_method" value="delete">
+      <input type="submit" value="Delete">
+    </form>
+  <% end %>
+</span>

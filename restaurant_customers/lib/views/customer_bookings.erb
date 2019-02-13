@@ -1,0 +1,7 @@
+<% @bookings.each do |booking| %>
+    <%= booking[:id] %>
+    Booking <%= @bookings.index(booking) + 1 %>
+    <form action="/booking/info/<%= booking[:id]%>" method="get">
+      <input type="submit" value="view">
+    </form>
+<%end%>  
