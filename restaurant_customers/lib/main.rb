@@ -1,25 +1,29 @@
 require 'sinatra'
+require 'sinatra/cookies'
 require 'rest-client'
 require 'json'
 
 #localhost:7272
 
-# def authenticate!
-# 	p session[:id]
-# 	unless session[:id]
-# 		redirect to('/')
-# 	end
-# end
-
 module RestaurantCustomers
 	class API < Sinatra::Base
-		use Rack::Session::Cookie, 
-		:key => 'rack.session',
-		:path => '/',
-		:secret => 'some_secret'
+		use Rack::MethodOverride
+		helpers Sinatra::Cookies
+
+		def authenticate!
+			unless cookies[:username]
+				redirect to('/')
+			end
+		end
+
+		def create_cookie(customer)
+			cookies[:name] = customer[:name]
+			cookies[:booking_id] = customer[:booking_id]
+			cookies[:username] = customer[:username]
+		end
 
 		get '/' do
-			p session[:id]
+			cookies.clear
 			erb :home
 		end
 
@@ -32,69 +36,76 @@ module RestaurantCustomers
 		end
 
 		post '/login' do
-			RestClient.post("localhost:8888/login",params)
-		end
+			response = RestClient.post("localhost:8888/login",params)
+			@customer = JSON.parse(response.body, symbolize_names:true)
+			create_cookie(@customer)
 
-		post '/after_login' do
-			@customer = JSON.parse(params[:data], symbolize_names:true)
-			session[:id] = @customer[:booking_id]
 			erb :customers_home
 		end
 
 		get '/logout' do
-			session.clear
+			cookies.clear
 			redirect to('/')
 		end
  
 		post '/signup' do
-			RestClient.post("localhost:8888/signup",params)
+			response = RestClient.post("localhost:8888/signup",params)
+			@customer = JSON.parse(response.body, symbolize_names:true)
+			create_cookie(@customer)
+
+			erb :customers_home
 		end
 
-		post '/after_signup' do
-			@customer = JSON.parse(params[:data], symbolize_names:true)
-			session[:id] = @customer[:booking_id]
-			RestClient.get("localhost:8888/customers/#{session[:id]}")
-		end
-
-		post '/customers/home' do
-			@customer = JSON.parse(params[:data], symbolize_names:true)
+		get '/customer/home' do
+			authenticate!
 			erb :customers_home
 		end
 
 		get '/booking_form' do
+			authenticate!
+			authenticate!
 			erb :booking_form
 		end
 
 		post '/booking' do
-			#RestClient.post("http://192.168.99.100:4000/booking",params)
-			params[:booking][:booking_id] = "-4461116352285698967"
+			params[:booking][:booking_id] = cookies[:booking_id]
 			RestClient.post("localhost:8888/booking",params)
 		end
 
 		get '/after_booking' do
-			"Booking saved"
+			erb :after_booking
 		end
 
-		get '/customer/bookings' do
-			RestClient.get("localhost:8080/customer/bookings/#{"-4461116352285698967"}")
+		get '/customer_bookings' do
+			authenticate!
+			RestClient.get("localhost:8080/customer/bookings/#{cookies[:booking_id]}")
 		end
 
-		post '/customer/bookings' do
+		post '/customer_bookings' do
 			params[:data].map! do |booking|
         JSON.parse(booking, symbolize_names:true)
       end
 
 			@bookings = params[:data]
-			p @bookings
 			erb :customer_bookings
 		end
 
 		get '/booking/info/:id' do
-			RestClient.get("localhost:8080/customer/booking/#{params[:id]}")
+			authenticate!
+			response = RestClient.get("localhost:8080/booking/#{params[:id]}")
+			@booking = JSON.parse(response.body, symbolize_names:true)
+			erb :booking_info
 		end
 
-		post '/booking/info' do
-			p params[:data]
+		get '/no_bookings' do
+      erb :no_bookings
+		end
+
+		get '/customer_info' do
+			authenticate!
+			response = RestClient.get("localhost:8888/customer/#{cookies[:booking_id]}")
+			@customer = JSON.parse(response.body, symbolize_names:true)
+			erb :profile_info
 		end
 	end
 end

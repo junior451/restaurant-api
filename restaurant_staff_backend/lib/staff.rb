@@ -19,7 +19,9 @@ class Staff
   include DataMapper::Resource
   property :id, Serial
   property :name, String
-  property :order_delivered, Integer
+  property :username, String
+  property :password, String
+  property :staff_number, String
 end
 
 class Bookings

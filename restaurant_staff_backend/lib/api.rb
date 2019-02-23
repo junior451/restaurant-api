@@ -6,23 +6,16 @@ require 'rest-client'
 #localhost:8080
 
 module RestaurantStaff
-  class API < Sinatra::Base        
-    get '/' do
-      'hello wd'
-    end
+  class API < Sinatra::Base 
 
-    get '/staff/:id' do
-      staff = Staff.get(params[:id])
-
-      if staff.nil?
-        halt [404, ""]
-      end
+    post '/login' do
+      staff = Staff.first(:username => params[:username], :password => params[:password])
       
-      { 
-        id:staff.id, 
-        name:staff.name, 
-        order_delivered:staff.order_delivered 
+      {
+        name:staff.name,
+        staff_number:staff.staff_number
       }.to_json
+
     end
 
     get '/booking/:id' do
@@ -33,6 +26,7 @@ module RestaurantStaff
       end
       
       booking_response = {
+        :id => booking.id,
         :name => booking.name,
         :email_address => booking.email_address,
         :phone_number => booking.phone_number,
@@ -41,33 +35,17 @@ module RestaurantStaff
         :time => booking.time,
         :reservation_type => booking.reservation_type
       }.to_json
-      
-      RestClient.post("localhost:9292/customer_booking", {:data => booking_response}, {:content_type => :json, :accept => :json})
     end
 
-    get '/customer/booking/:id' do
-      p params[:id]
-      booking = Bookings.first(params[:id])
-
-      if booking.nil?
-        halt [404, ""]
-      end
-      
-      booking_response = {
-        :name => booking.name,
-        :table_size => booking.table_size, 
-        :date => booking.date,
-        :time => booking.time,
-        :reservation_type => booking.reservation_type
-      }.to_json
-      
-      RestClient.post("localhost:9292/booking/info", {:data => booking_response}, {:content_type => :json, :accept => :json})
+    put '/booking/edit/:id' do
+      Bookings.get(params[:id]).update(params[:booking])
     end
 
     get '/bookings' do
       booking_array = Bookings.all.each_with_object([]) do |booking, hash|
         booking_hash = {
           :id => booking.id,
+          :name => booking.name
         }.to_json
         
         hash.push(booking_hash)
@@ -78,45 +56,42 @@ module RestaurantStaff
     
     get '/customer/bookings/:id' do
       bookings = Bookings.all(:booking_id => params[:id])
-      booking_array = bookings.each_with_object([]) do |booking, hash|
+      booking_array = bookings.each_with_object([]) do |booking, arr|
         booking_hash = {
-          :id => booking.booking.id,
+          :id => booking.id
         }.to_json
         
-        hash.push(booking_hash)
-      end  
+        arr.push(booking_hash)
+      end
 
-      RestClient.post("localhost:7272/customer/bookings", {:data => booking_array}, {:content_type => :json, :accept => :json})
-    end
-      
-    get '/customers/:id' do
-      id = params[:id]
-			#response = RestClient.get("restaurant-api_customers_1:2000/customers/#{id}")
-			response
+      if booking_array.empty?
+        RestClient.get("localhost:7272/no_bookings")
+      else
+        RestClient.post("localhost:7272/customer_bookings", {:data => booking_array}, {:content_type => :json, :accept => :json})
+      end
     end
 
     post '/booking' do
       p params[:booking]
       Bookings.create(params[:booking])
-      redirect to('/after_booking')
-    end
-    
-    get '/after_booking' do
       RestClient.get("localhost:7272/after_booking")
-    end
-
-    post '/staff' do
-      if params.empty?
-        [404, "no booking information"]
-      else
-        Staff.create(name:params[:name], order_delivered:params[:order_delivered])
-      end
     end
 
     delete '/booking/:id' do
       id = params[:id]
       Bookings.get(id).destroy
-      RestClient.get("localhost:9292/after_delete")
+    end
+
+    post '/customer_info' do
+      bookings = Bookings.all(:booking_id => params[:booking_id])
+      params[:number_bookings] = bookings.length
+
+      {
+        :name => params[:name],
+        :phone_number => params[:phone_number],
+        :email_address => params[:email_address],
+        :number_bookings => params[:number_bookings],
+      }.to_json
     end
   end
 end 

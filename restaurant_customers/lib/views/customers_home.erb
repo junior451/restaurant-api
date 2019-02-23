@@ -1,5 +1,5 @@
-<p>Welcome <%= @customer[:name]%> <p>
+<p>Welcome <%= cookies[:name].gsub('+', ' ')%> <p>
 <a href="/booking_form">Make a Booking</a><br/>
-<a href="/customer/bookings">View my bookings</a><br/>
-<a href="/booking_form">View my profile</a><br/>
+<a href="/customer_bookings">View my bookings</a><br/>
+<a href="/customer_info">View my profile</a><br/>
 <a href="/logout">Log Out</a>

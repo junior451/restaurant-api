@@ -1,0 +1,26 @@
+<h2>Edit Booking</h2>
+<form method="POST" action="/booking/edit/<%= @booking[:id] %>">
+  <p>Table Size: <input type="number" name="booking[table_size]" value="<%= @booking[:table_size] %>" min="1" max="12" /></p>
+  <p>Date: <input type="date" name="booking[date]" value="<%= @booking[:date] %>" /></p>
+  <p>Time: <input type="time" name="booking[time]" value="<%= @booking[:time] %>" min="12:00" max="20:00" /></p>
+  <p>Reservation Type:
+    <select name="booking[reservation_type]">
+      <option value="" selected disabled hidden><%= @booking[:reservation_type] %></option>
+      <option value="dinner">Dinner</option>
+      <option value="birthday">Birthday</option>
+      <option value="nightlife">NightLife</option>
+      <option value="wedding">Wedding</option>
+      <option value="other">Other</option>
+    </select>
+  </p>
+  <input type="hidden" name="_method" value="put">
+  <span style="float:left; padding-right:20px">
+    <input type="submit" value="Submit">
+  </span>
+</form>
+<button onclick="goBack()">Cancel</button>
+<script>
+function goBack() {
+  window.history.back();
+}
+</script>
