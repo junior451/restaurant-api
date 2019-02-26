@@ -6,14 +6,14 @@ RUN apt-get update && \
 # Install gems
 ENV APP_HOME /app
 ENV HOME /root
-RUN mkdir $APP_HOME
-WORKDIR $APP_HOME
-COPY Gemfile* $APP_HOME/
+RUN mkdir /usr/src/app/
+WORKDIR /usr/src/app/
+COPY Gemfile* /usr/src/app/
 RUN bundle install
 
 # Upload source
-COPY . $APP_HOME
+COPY . /usr/src/app/
 
 # Start server
 EXPOSE 4000
-CMD ["bundle", "exec", "shotgun", "--host", "0.0.0.0", "-p", "4000"]
+CMD ["rackup", "--host", "0.0.0.0", "-p", "4000"]

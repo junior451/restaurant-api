@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'sinatra/config_file'
 require 'rest-client'
 require 'sinatra/cookies'
 
@@ -8,6 +9,9 @@ module RestaurantStaff
   class API < Sinatra::Base
     use Rack::MethodOverride
     helpers Sinatra::Cookies
+    register Sinatra::ConfigFile
+		
+		config_file '../config.yml'
 
     def authenticate!
       unless cookies[:staff_number]
@@ -22,6 +26,7 @@ module RestaurantStaff
 
     get '/' do
       cookies.clear
+      p settings.address
       erb :home
     end
 
@@ -30,7 +35,7 @@ module RestaurantStaff
     end
 
     post '/login' do
-      response = RestClient.post("localhost:8080/login",params)
+      response = RestClient.post("#{settings.address}:8080/login",params)
       @staff = JSON.parse(response.body, symbolize_names:true)
       create_cookie(@staff)
 
@@ -49,7 +54,7 @@ module RestaurantStaff
 
     get '/customers' do
       authenticate!
-      RestClient.get("localhost:8888/customers")
+      RestClient.get("#{settings.address}:8888/customers")
     end
 
     post '/customers' do
@@ -63,7 +68,7 @@ module RestaurantStaff
 
     get '/customer/:id' do
       authenticate!
-      response = RestClient.get("localhost:8888/customer/#{params[:id]}")
+      response = RestClient.get("#{settings.address}:8888/customer/#{params[:id]}")
       @customer = JSON.parse(response.body, symbolize_names:true)
 
       erb :customers_info
@@ -71,7 +76,7 @@ module RestaurantStaff
 
     get '/bookings' do
       authenticate!
-      RestClient.get("localhost:8080/bookings")
+      RestClient.get("#{settings.address}:8080/bookings")
     end
 
     post '/bookings' do
@@ -83,10 +88,14 @@ module RestaurantStaff
 
       erb :bookings_list
     end
+
+    get '/no_bookings' do
+      erb :no_bookings
+    end
     
     get '/booking/:id' do
       authenticate!
-      response = RestClient.get("localhost:8080/booking/#{params[:id]}")
+      response = RestClient.get("#{settings.address}:8080/booking/#{params[:id]}")
       @booking = JSON.parse(response.body, symbolize_names:true)
       
       erb :booking_info
@@ -94,19 +103,19 @@ module RestaurantStaff
 
     get '/booking/edit/:id' do
       authenticate!
-      response = RestClient.get("localhost:8080/booking/#{params[:id]}")
+      response = RestClient.get("#{settings.address}:8080/booking/#{params[:id]}")
       @booking = JSON.parse(response.body, symbolize_names:true)
 
       erb :edit_booking
     end
     
     put '/booking/edit/:id' do
-      RestClient.put("localhost:8080/booking/edit/#{params[:id]}",params)
+      RestClient.put("#{settings.address}:8080/booking/edit/#{params[:id]}",params)
       erb :booking_updated
 		end
 
     delete '/booking/:id' do
-      RestClient.delete("localhost:8080//booking/#{params[:id]}")
+      RestClient.delete("#{settings.address}:8080//booking/#{params[:id]}")
 
       erb :booking_deleted
     end

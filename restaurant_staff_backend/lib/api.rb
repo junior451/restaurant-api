@@ -1,4 +1,5 @@
 require 'sinatra/base'
+require 'sinatra/config_file'
 require 'json'
 require_relative 'staff'
 require 'rest-client'
@@ -6,7 +7,14 @@ require 'rest-client'
 #localhost:8080
 
 module RestaurantStaff
-  class API < Sinatra::Base 
+  class API < Sinatra::Base
+    register Sinatra::ConfigFile
+		
+    config_file '../config.yml'
+    
+    get '/' do
+      p "app running on #{settings.hostname}"
+    end
 
     post '/login' do
       staff = Staff.first(:username => params[:username], :password => params[:password])
@@ -50,7 +58,12 @@ module RestaurantStaff
         
         hash.push(booking_hash)
       end
-      RestClient.post("localhost:9292/bookings", {:data => booking_array}, {:content_type => :json, :accept => :json})
+
+      if booking_array.empty?
+        RestClient.get("#{settings.address}:9292/no_bookings")
+      else
+        RestClient.post("#{settings.address}:9292/bookings", {:data => booking_array}, {:content_type => :json, :accept => :json})
+      end
     end
 
     
@@ -65,16 +78,15 @@ module RestaurantStaff
       end
 
       if booking_array.empty?
-        RestClient.get("localhost:7272/no_bookings")
+        RestClient.get("#{settings.address}:7272/no_bookings")
       else
-        RestClient.post("localhost:7272/customer_bookings", {:data => booking_array}, {:content_type => :json, :accept => :json})
+        RestClient.post("#{settings.address}:7272/customer_bookings", {:data => booking_array}, {:content_type => :json, :accept => :json})
       end
     end
 
     post '/booking' do
-      p params[:booking]
       Bookings.create(params[:booking])
-      RestClient.get("localhost:7272/after_booking")
+      RestClient.get("#{settings.address}:7272/after_booking")
     end
 
     delete '/booking/:id' do

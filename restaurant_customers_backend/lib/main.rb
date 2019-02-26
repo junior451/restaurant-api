@@ -1,16 +1,20 @@
 require 'sinatra/base'
+require 'sinatra/config_file'
 require_relative 'customers'
 require 'json'
 require 'rest-client'
 require 'sinatra'
-require 'sinatra/cookies'
 
 #localhost:8888'
 
 module RestaurantCustomersBackend
   class API < Sinatra::Base
+    register Sinatra::ConfigFile
+		
+    config_file '../config.yml'
+    
     get '/' do
-      'working'
+      p "app running on #{settings.hostname}"
     end
     
     post '/login' do
@@ -21,8 +25,6 @@ module RestaurantCustomersBackend
         :username => customer.username,
         :booking_id => customer.booking_id
       }.to_json
-  
-      #RestClient.post("localhost:7272/customer/home", {:data => customer_info}, {:content_type => :json, :accept => :json})
     end
 
     post '/signup' do 
@@ -37,8 +39,6 @@ module RestaurantCustomersBackend
         :username => customer.username,
         booking_id:customer.booking_id
       }.to_json
-      
-      #RestClient.post("localhost:7272/customer/home", {:data => customer_info}, {:content_type => :json, :accept => :json})
     end
 
     post '/booking' do
@@ -46,7 +46,7 @@ module RestaurantCustomersBackend
       params[:booking][:name] = customer.name
       params[:booking][:phone_number] = customer.phone_number
       params[:booking][:email_address] = customer.email_address
-      RestClient.post("localhost:8080/booking",params)
+      RestClient.post("#{settings.address}:8080/booking",params)
     end
 
     get '/customers' do
@@ -59,7 +59,7 @@ module RestaurantCustomersBackend
         hash.push(customer_hash)
       end
 
-      RestClient.post("localhost:9292/customers", {:data => customers_array}, {:content_type => :json, :accept => :json})
+      RestClient.post("#{settings.address}:9292/customers", {:data => customers_array}, {:content_type => :json, :accept => :json})
     end
 
     get '/customer/:id' do
@@ -72,7 +72,7 @@ module RestaurantCustomersBackend
         params[:email_address] = customer.email_address
       end
 
-      RestClient.post("localhost:8080/customer_info",params)
+      RestClient.post("#{settings.address}:8080/customer_info",params)
     end
   end
 end

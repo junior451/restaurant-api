@@ -10,6 +10,10 @@ configure :development do
   DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/development.db")
 end
 
+configure :docker_development do
+  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/docker_dev.db")
+end
+
 configure :test do
   DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/test.db")
 end

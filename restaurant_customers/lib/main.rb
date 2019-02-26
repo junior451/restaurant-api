@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'sinatra/cookies'
+require 'sinatra/config_file'
 require 'rest-client'
 require 'json'
 
@@ -9,6 +10,9 @@ module RestaurantCustomers
 	class API < Sinatra::Base
 		use Rack::MethodOverride
 		helpers Sinatra::Cookies
+		register Sinatra::ConfigFile
+		
+		config_file '../config.yml'
 
 		def authenticate!
 			unless cookies[:username]
@@ -24,6 +28,7 @@ module RestaurantCustomers
 
 		get '/' do
 			cookies.clear
+			p settings.address
 			erb :home
 		end
 
@@ -36,7 +41,7 @@ module RestaurantCustomers
 		end
 
 		post '/login' do
-			response = RestClient.post("localhost:8888/login",params)
+			response = RestClient.post("#{settings.address}:8888/login",params)
 			@customer = JSON.parse(response.body, symbolize_names:true)
 			create_cookie(@customer)
 
@@ -49,7 +54,7 @@ module RestaurantCustomers
 		end
  
 		post '/signup' do
-			response = RestClient.post("localhost:8888/signup",params)
+			response = RestClient.post("#{settings.address}:8888/signup",params)
 			@customer = JSON.parse(response.body, symbolize_names:true)
 			create_cookie(@customer)
 
@@ -69,7 +74,7 @@ module RestaurantCustomers
 
 		post '/booking' do
 			params[:booking][:booking_id] = cookies[:booking_id]
-			RestClient.post("localhost:8888/booking",params)
+			RestClient.post("#{settings.address}:8888/booking",params)
 		end
 
 		get '/after_booking' do
@@ -78,7 +83,7 @@ module RestaurantCustomers
 
 		get '/customer_bookings' do
 			authenticate!
-			RestClient.get("localhost:8080/customer/bookings/#{cookies[:booking_id]}")
+			RestClient.get("#{settings.address}:8080/customer/bookings/#{cookies[:booking_id]}")
 		end
 
 		post '/customer_bookings' do
@@ -92,7 +97,7 @@ module RestaurantCustomers
 
 		get '/booking/info/:id' do
 			authenticate!
-			response = RestClient.get("localhost:8080/booking/#{params[:id]}")
+			response =RestClient.get("#{settings.address}:8080/booking/#{params[:id]}")
 			@booking = JSON.parse(response.body, symbolize_names:true)
 			erb :booking_info
 		end
@@ -103,7 +108,7 @@ module RestaurantCustomers
 
 		get '/customer_info' do
 			authenticate!
-			response = RestClient.get("localhost:8888/customer/#{cookies[:booking_id]}")
+			response = RestClient.get("#{settings.address}:8888/customer/#{cookies[:booking_id]}")
 			@customer = JSON.parse(response.body, symbolize_names:true)
 			erb :profile_info
 		end
