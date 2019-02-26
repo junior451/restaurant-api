@@ -37,7 +37,7 @@ module RestaurantCustomers
 		end
 
 		get '/signup' do
-			erb :signup
+      erb :signup
 		end
 
 		post '/login' do
@@ -67,7 +67,6 @@ module RestaurantCustomers
 		end
 
 		get '/booking_form' do
-			authenticate!
 			authenticate!
 			erb :booking_form
 		end
