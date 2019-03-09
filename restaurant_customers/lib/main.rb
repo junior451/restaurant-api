@@ -27,6 +27,7 @@ module RestaurantCustomers
 		end
 
 		get '/' do
+			p 'cameere'
 			cookies.clear
 			p settings.address
 			erb :home

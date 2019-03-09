@@ -1,0 +1,58 @@
+version: "3"
+services:
+  customers_frontend:
+    image: junior451/restaurant_customers_frontend
+    ports:
+      - "7272:2000"
+    volumes:
+      - ./restaurant_customers:/usr/src/app/customers/
+    environment:
+      - RACK_ENV=production
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: customers_frontend
+        awslogs-region: eu-west-1
+        awslogs-stream-prefix: customers_frontend
+  customers_backend:
+    image: junior451/restaurant_customers_backend
+    ports:
+      - "8888:3000"
+    volumes:
+      - ./restaurant_customers_backend:/usr/src/app/customers_backend/
+    environment:
+      - RACK_ENV=production
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: customers_backend
+        awslogs-region: eu-west-1
+        awslogs-stream-prefix: customers_backend
+  staff_frontend:
+    image: junior451/restaurant_staff_frontend
+    ports:
+      - "9292:4000"   
+    volumes:
+      - ./restaurant_staff:/usr/src/app/staff/
+    environment:
+      - RACK_ENV=production
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: staff_frontend
+        awslogs-region: eu-west-1
+        awslogs-stream-prefix: staff_frontend
+  staff_backend:
+    image: junior451/restaurant_staff_backend
+    ports:
+      - "8080:5000" 
+    volumes:
+      - ./restaurant_staff_backend:/usr/src/app/staff_backend/
+    environment:
+      - RACK_ENV=production
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: staff_backend
+        awslogs-region: eu-west-1
+        awslogs-stream-prefix: staff_backend

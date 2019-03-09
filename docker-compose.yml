@@ -7,7 +7,7 @@ services:
     volumes:
       - ./restaurant_customers:/usr/src/app/customers/
     environment:
-      - RACK_ENV=docker_development  
+      - RACK_ENV=docker_development
     depends_on:
       - customers_backend
   customers_backend:
@@ -21,7 +21,7 @@ services:
   staff_frontend:
     build: "./restaurant_staff"
     ports:
-      - "9292:5000"   
+      - "9292:4000"   
     volumes:
       - ./restaurant_staff:/usr/src/app/staff/
     environment:
@@ -31,7 +31,7 @@ services:
   staff_backend:
     build: "./restaurant_staff_backend"
     ports:
-      - "8080:4000" 
+      - "8080:5000" 
     volumes:
       - ./restaurant_staff_backend:/usr/src/app/staff_backend/
     environment:

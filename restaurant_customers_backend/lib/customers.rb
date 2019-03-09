@@ -3,7 +3,7 @@ require 'dm-migrations'
 require 'sinatra'
 
 configure :production do
-  DataMapper.setup(:default, ENV['DATABASE_URL'])
+  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/prod.db")
 end
 
 configure :development do

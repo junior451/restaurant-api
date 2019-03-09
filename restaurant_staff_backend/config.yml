@@ -1,12 +1,12 @@
 development:
   address: http://localhost
   hostname: dev_host
+production:
+  address: http://54.154.6.213
+  hostname: prod_host
 docker_development:
   address: http://192.168.99.100
   hostname: docker_host
 test:
   address: http://localhost
-  hostname: dev_host
-production:
-  address: production_host
-  hostname: prod_host
+  hostname: test_host

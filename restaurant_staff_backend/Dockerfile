@@ -15,5 +15,5 @@ RUN bundle install
 COPY . /usr/src/app/
 
 # Start server
-EXPOSE 4000
-CMD ["rackup", "--host", "0.0.0.0", "-p", "4000"]
+EXPOSE 5000
+CMD ["rackup", "--host", "0.0.0.0", "-p", "5000"]

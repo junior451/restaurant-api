@@ -1,0 +1,15 @@
+version: 1
+task_definition:
+  services:
+    customers_frontend:
+      cpu_shares: 100
+      mem_limit: "128m"
+    customers_backend:
+      cpu_shares: 100
+      mem_limit: "128m"
+    staff_frontend:
+      cpu_shares: 100
+      mem_limit: "128m"
+    staff_backend:
+      cpu_shares: 100
+      mem_limit: "128m"
