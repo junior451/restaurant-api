@@ -14,7 +14,7 @@ module RestaurantCustomersBackend
     config_file '../config.yml'
     
     get '/' do
-      p "app running on #{settings.hostname}"
+      "app running on #{settings.hostname}"
     end
     
     post '/login' do

@@ -13,10 +13,10 @@ module RestaurantStaff
     config_file '../config.yml'
     
     get '/' do
-      p "app running on #{settings.hostname}"
+      "app running on #{settings.hostname}"
     end
 
-    post '/login' do
+		post '/login' do
       staff = Staff.first(:username => params[:username], :password => params[:password])
       
       {
@@ -45,7 +45,7 @@ module RestaurantStaff
       }.to_json
     end
 
-    put '/booking/edit/:id' do
+		put '/booking/edit/:id' do
       Bookings.get(params[:id]).update(params[:booking])
     end
 
@@ -84,7 +84,7 @@ module RestaurantStaff
       end
     end
 
-    post '/booking' do
+		post '/booking' do
       Bookings.create(params[:booking])
       RestClient.get("#{settings.address}:7272/after_booking")
     end
@@ -94,7 +94,7 @@ module RestaurantStaff
       Bookings.get(id).destroy
     end
 
-    post '/customer_info' do
+		post '/customer_info' do
       bookings = Bookings.all(:booking_id => params[:booking_id])
       params[:number_bookings] = bookings.length
 
